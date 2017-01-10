@@ -4,16 +4,44 @@
               [secretary.core :as secretary :include-macros true]
               [accountant.core :as accountant]))
 
+(def flow {
+  :start {
+    :text "Oi, sou Octo...",
+    :next :greetings
+  }
+  :greetings {
+    :text "Tudo bom?"
+    :answers [
+      {
+        :text "Sim"
+        :next :ok
+      }
+      {
+        :text "Não"
+        :next :nok
+      }
+    ]
+  }
+  :ok {
+    :text "Que bom"
+    :next :end
+  }
+  :nok {
+    :text "Que pena"
+    :next :end
+  }
+})
+
 ;; -------------------------
 ;; Views
+
+(defn button [label on-press] (fn [] [:button {:on-click on-press} label]))
+
+(defn baloon [from message] (fn [] [:div.balloon ]))
 
 (defn home-page []
   [:div [:h2 "Welcome to octavioturra"]
    [:div [:a {:href "/about"} "go to about page"]]])
-
-(defn about-page []
-  [:div [:h2 "About octavioturra"]
-   [:div [:a {:href "/"} "go to the home page"]]])
 
 (defn current-page []
   [:div [(session/get :current-page)]])
@@ -23,9 +51,6 @@
 
 (secretary/defroute "/" []
   (session/put! :current-page #'home-page))
-
-(secretary/defroute "/about" []
-  (session/put! :current-page #'about-page))
 
 ;; -------------------------
 ;; Initialize app
