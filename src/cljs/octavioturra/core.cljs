@@ -2,7 +2,13 @@
     (:require [reagent.core :as reagent :refer [atom]]
               [reagent.session :as session]
               [secretary.core :as secretary :include-macros true]
-              [accountant.core :as accountant]))
+              [accountant.core :as accountant]
+              [cljs-http.client :as http]
+              [cljs.core.async :refer [<!]])
+    (:require-macros [cljs.core.async.macros :refer [go]]))
+
+;; -------------------------
+;; Flow
 
 (def flow {
   :start {
@@ -33,15 +39,38 @@
 })
 
 ;; -------------------------
-;; Views
+;; State
+
+(def state (atom {
+  :messages []
+  :current-step nil
+}))
+
+;; -------------------------
+;; Components
 
 (defn button [label on-press] (fn [] [:button {:on-click on-press} label]))
 
-(defn baloon [from message] (fn [] [:div.balloon ]))
+(defn avatar [owner] [:img.avatar {:src owner}])
+
+(defn baloon [from message] (fn [] [:div.balloon [avatar from] [:div.content message]]))
+
+(defn deck [messages] (fn []
+(if (map (fn [{from :from text :text}] [baloon from text]) messages)
+    [:div "calma um pouco"]
+)))
+
+;; -------------------------
+;; Views
 
 (defn home-page []
-  [:div [:h2 "Welcome to octavioturra"]
-   [:div [:a {:href "/about"} "go to about page"]]])
+  (let [
+    {
+      messages :messages
+      current-step :current-step
+    } state
+  ] (fn [] [:div [:h2 "Olá, "]
+      [deck messages]])))
 
 (defn current-page []
   [:div [(session/get :current-page)]])
@@ -54,6 +83,8 @@
 
 ;; -------------------------
 ;; Initialize app
+
+(defn initialize-messages [first-step] (update-in state [:messages] conj first-step))
 
 (defn mount-root []
   (reagent/render [current-page] (.getElementById js/document "app")))

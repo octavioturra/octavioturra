@@ -12,6 +12,8 @@
                  [ring/ring-defaults "0.2.1"]
                  [compojure "1.5.1"]
                  [hiccup "1.0.5"]
+                 [org.clojure/core.async "0.2.395"]
+                 [cljs-http "0.1.42"]
                  [yogthos/config "0.8"]
                  [org.clojure/clojurescript "1.9.293"
                   :scope "provided"]
