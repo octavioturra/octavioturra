@@ -8,35 +8,14 @@
     (:require-macros [cljs.core.async.macros :refer [go]]))
 
 ;; -------------------------
-;; Flow
+;; Utils
 
-(def flow {
-  :start {
-    :text "Oi, sou Octo...",
-    :next :greetings
-  }
-  :greetings {
-    :text "Tudo bom?"
-    :answers [
-      {
-        :text "Sim"
-        :next :ok
-      }
-      {
-        :text "Não"
-        :next :nok
-      }
-    ]
-  }
-  :ok {
-    :text "Que bom"
-    :next :end
-  }
-  :nok {
-    :text "Que pena"
-    :next :end
-  }
-})
+(defn log [d] (js/console.log (clj->js d)) d)
+
+;; -------------------------
+;; Request
+
+(defn load-flow [] (http/get "/flow.json"))
 
 ;; -------------------------
 ;; State
@@ -56,9 +35,9 @@
 (defn baloon [from message] (fn [] [:div.balloon [avatar from] [:div.content message]]))
 
 (defn deck [messages] (fn []
-(if (map (fn [{from :from text :text}] [baloon from text]) messages)
-    [:div "calma um pouco"]
-)))
+  (if (map (fn [{from :from text :text}] [baloon from text]) messages)
+      [:div "calma um pouco"]
+  )))
 
 ;; -------------------------
 ;; Views
@@ -90,12 +69,16 @@
   (reagent/render [current-page] (.getElementById js/document "app")))
 
 (defn init! []
-  (accountant/configure-navigation!
-    {:nav-handler
-     (fn [path]
-       (secretary/dispatch! path))
-     :path-exists?
-     (fn [path]
-       (secretary/locate-route path))})
-  (accountant/dispatch-current!)
-  (mount-root))
+  (go (let [
+          {flow :body} (<! (load-flow))
+        ]
+        ; (initialize-messages (:start (log flow)))
+        (accountant/configure-navigation!
+          {:nav-handler
+          (fn [path]
+            (secretary/dispatch! path))
+          :path-exists?
+          (fn [path]
+            (secretary/locate-route path))})
+        (accountant/dispatch-current!)
+        (mount-root))))

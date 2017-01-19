@@ -1,0 +1,19 @@
+{
+    "start": {
+        "text": "oi, sou Octo...",
+        "next": "greetings"
+    },
+    "greetings": {
+        "text": "Tudo bom?",
+        "answers": [{
+            "text": "Sim",
+            "next": "end"
+        },{
+            "text": "Não",
+            "next": "end"
+        }]
+    },
+    "end": {
+        "text": "Uow"
+    }
+}
