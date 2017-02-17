@@ -16,10 +16,7 @@
                  [cljs-http "0.1.42"]
                  [yogthos/config "0.8"]
                  [org.clojure/clojurescript "1.9.293"
-                  :scope "provided"]
-                 [secretary "1.2.3"]
-                 [venantius/accountant "0.1.7"
-                  :exclusions [org.clojure/tools.reader]]]
+                  :scope "provided"]]
 
   :plugins [[lein-environ "1.0.2"]
             [lein-cljsbuild "1.1.1"]
@@ -97,8 +94,6 @@
    :css-dirs ["resources/public/css"]
    :ring-handler octavioturra.handler/app}
 
-
-
   :profiles {:dev {:repl-options {:init-ns octavioturra.repl
                                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
 
@@ -110,8 +105,7 @@
                                   [com.cemerick/piggieback "0.2.2-SNAPSHOT"]
                                   [speclj "3.3.1"]
                                   [devcards "0.2.1-7"]
-                                  [pjstadig/humane-test-output "0.8.1"]
-                                  ]
+                                  [pjstadig/humane-test-output "0.8.1"]]
 
                    :source-paths ["env/dev/clj"]
                    :plugins [[lein-figwheel "0.5.8"]

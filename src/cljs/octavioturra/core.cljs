@@ -27,8 +27,8 @@
 ;; Broker
 
 (defn emit-gtm [event detail] 
-  (if js/window.dataLayer 
-    (js/window.dataLayer.push 
+  (if (.-dataLayer js/window)
+    (.push (.-dataLayer js/window)
       (js/Object.assign 
         (clj->js {:event event}) 
         (clj->js detail)))))
