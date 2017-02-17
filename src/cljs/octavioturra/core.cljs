@@ -26,9 +26,11 @@
 ;; -------------------------
 ;; Broker
 
+(defn dataLayer [] (goog.object.get js/window "dataLayer"))
+
 (defn emit-gtm [event detail] 
-  (if (.-dataLayer js/window)
-    (.push (.-dataLayer js/window)
+  (if (dataLayer)
+    (.push (dataLayer)
       (js/Object.assign 
         (clj->js {:event event}) 
         (clj->js detail)))))
