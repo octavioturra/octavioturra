@@ -26,23 +26,23 @@
 ;; -------------------------
 ;; Broker
 
-(defn emit-gtm [event detail] 
-  (if js/window.dataLayer 
-    (js/window.dataLayer.push 
-      (js/Object.assign 
-        (clj->js {:event event}) 
+(defn emit-gtm [event detail]
+  (if js/window.dataLayer
+    (js/window.dataLayer.push
+      (js/Object.assign
+        (clj->js {:event event})
         (clj->js detail)))))
 
-(defn dispatch [event detail] 
+(defn dispatch [event detail]
   (swap! state update-in [:events] conj {:event event :detail detail})
   (emit-gtm event detail)
   (log ["dispatching" event detail])
-  (js/window.dispatchEvent 
+  (js/window.dispatchEvent
     (js/CustomEvent. event (clj->js {:detail detail}))))
 
-(defn listen [event listener] 
-  (js/window.addEventListener event 
-    (fn [ev] 
+(defn listen [event listener]
+  (js/window.addEventListener event
+    (fn [ev]
       (let [detail (js->clj (.-detail ev))]
       (log ["receiving" event detail])
       (listener detail)))))
@@ -52,12 +52,12 @@
     next (get step "next")
     text (get step "text")
     owner (get step "owner")
-  ] 
+  ]
     (log ["step" step])
     (when text (dispatch "add-text" {"text" text "owner" owner}))
     (when next (dispatch "set-step" {"step" next}))))
 
-(defn set-step [step-name] 
+(defn set-step [step-name]
     (let [flow (:flow @state)
           step (get flow step-name)]
       (swap! state assoc-in [:step] step)
@@ -68,16 +68,16 @@
     (swap! state update-in [:messages] conj message))
 
 (defn listen-set-step []
-  (listen "set-step" 
-    (fn [detail] 
-      (set-step 
+  (listen "set-step"
+    (fn [detail]
+      (set-step
         (get detail "step")))))
 
 (defn listen-add-text []
   (listen "add-text"
     (fn [detail]
       (let [text (get detail "text")
-            owner (get detail "owner")] 
+            owner (get detail "owner")]
         (add-text {:text text :owner owner})))))
 
 (defn listen-answered []
@@ -96,16 +96,16 @@
   (listen-set-step)
   (listen-answered))
 
-(defn button-handler [answer] 
-  (fn [] 
+(defn button-handler [answer]
+  (fn []
     (dispatch "answered" {"answer" answer})))
 
-(defn footer [answers] 
-    [:footer 
-      (map-indexed 
-        (fn [i answer] 
-          [:button 
-            {:key i :on-click (button-handler answer)} (get answer "text")]) 
+(defn footer [answers]
+    [:footer
+      (map-indexed
+        (fn [i answer]
+          [:button
+            {:key i :on-click (button-handler answer)} (get answer "text")])
               answers)])
 
 (defn chat [messages]
@@ -115,7 +115,7 @@
 ;; -------------------------
 ;; Main Component
 
-(defn main [] (fn [] 
+(defn main [] (fn []
                 (let [answers (get (:step @state) "answers")
                       messages (:messages @state)]
                         (log ["main" answers messages @state])
@@ -136,9 +136,9 @@
       (dispatch "set-step" {"step" "start"})
       (mount-root))
 
-(defn init! [] 
-  (listen "app-loaded" 
-    (fn [detail] 
+(defn init! []
+  (listen "app-loaded"
+    (fn [detail]
       (let [flow (get detail "flow")]
         (bootstrap! flow))))
   (emit-gtm "app-loaded" {}))

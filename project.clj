@@ -18,6 +18,7 @@
                  [org.clojure/clojurescript "1.9.293"
                   :scope "provided"]
                  [secretary "1.2.3"]
+                 [garden "1.3.2"]
                  [venantius/accountant "0.1.7"
                   :exclusions [org.clojure/tools.reader]]]
 
