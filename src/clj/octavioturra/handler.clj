@@ -22,6 +22,7 @@
                                       j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
                                       })(window,document,'script','dataLayer','GTM-T8KP5XB');"]
+   [:link {:href "https://fonts.googleapis.com/css?family=VT323" :rel "stylesheet"}]
    (include-css (if (env :dev) "/css/site.css" "/css/site.min.css"))])
 
 (defn loading-page []

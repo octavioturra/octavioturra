@@ -15,16 +15,7 @@
                  [org.clojure/core.async "0.2.395"]
                  [cljs-http "0.1.42"]
                  [yogthos/config "0.8"]
-                 [org.clojure/clojurescript "1.9.293"
-<<<<<<< HEAD
-                  :scope "provided"]]
-=======
-                  :scope "provided"]
-                 [secretary "1.2.3"]
-                 [garden "1.3.2"]
-                 [venantius/accountant "0.1.7"
-                  :exclusions [org.clojure/tools.reader]]]
->>>>>>> 85987499e0613fc23b9c6a2e7e7ad65ab56b1a4c
+                 [org.clojure/clojurescript "1.9.293" :scope "provided"]]
 
   :plugins [[lein-environ "1.0.2"]
             [lein-cljsbuild "1.1.1"]

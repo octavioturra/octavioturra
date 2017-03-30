@@ -99,6 +99,9 @@
   (fn []
     (dispatch "answered" {"answer" answer})))
 
+(defn balloon [{owner :owner message :message}]
+  [:div.balloon {:class (if (= owner "Octo") "site" "user")} [:small owner] [:br] [:span message]] )
+
 (defn footer [answers]
     [:footer
       (map-indexed
@@ -109,7 +112,7 @@
 
 (defn chat [messages]
     [:article
-      (map-indexed (fn [i message] [:div {:key i} [:small (:owner message)] [:br] (:text message)]) messages)])
+      (map-indexed (fn [i message] [balloon {:key i :owner (:owner message) :message (:text message)}]) messages)])
 
 ;; -------------------------
 ;; Main Component
@@ -119,7 +122,9 @@
                       messages (:messages @state)]
                         (log ["main" answers messages @state])
                         [:main
-                          [:header "Cabeçalho"]
+                          [:header
+                            [:small "by"]
+                            [:h1 "Octávio Turra"]]
                           (when messages [chat messages])
                           (when answers [footer answers])])))
 
